@@ -8,6 +8,7 @@ import (
 
 const (
 	smtpAddr string = ":25"
+	greeting string = "220 smtp.testserver.com ESMTP postfix"
 )
 
 type smtpSession struct {
@@ -18,8 +19,8 @@ type smtpSession struct {
 	sourceAddress          string
 }
 
-//Main connection loop
-func startSMTPServer() {
+//StartSMTPServer starts the main connection loop
+func StartSMTPServer() {
 	//Start message
 	tcpAddr, err := net.ResolveTCPAddr("ipv4", smtpAddr)
 	//setup connection listener
@@ -37,6 +38,9 @@ func startSMTPServer() {
 }
 
 func smtpSessionHandler(conn net.Conn) {
+	session := smtpSession{}
+	session.sourceAddress = conn.RemoteAddr().String()
+	conn.Write([]byte(greeting))
 	//Get the input from the connection
 
 	//Send HELO
@@ -44,7 +48,8 @@ func smtpSessionHandler(conn net.Conn) {
 	//Parse the first word for the SMTP connection
 }
 
-//SMTP command checker
+//SMTP command handler
+//Takes in input from the session handler and sends the response string
 
 //Interface into honeypot handler
 
