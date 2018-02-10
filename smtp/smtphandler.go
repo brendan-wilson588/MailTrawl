@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	smtpAddr string = ":25"
+	smtpAddr string = "0.0.0.0:2255"
 	greeting string = "220 smtp.testserver.com ESMTP postfix"
 )
 
@@ -22,9 +22,9 @@ type smtpSession struct {
 //StartSMTPServer starts the main connection loop
 func StartSMTPServer() {
 	//Start message
-	tcpAddr, err := net.ResolveTCPAddr("ipv4", smtpAddr)
 	//setup connection listener
-	listener, err := net.ListenTCP("tcp", tcpAddr)
+	listener, err := net.Listen("tcp", smtpAddr)
+	fmt.Println("SMTP server started...")
 	errorHandler(err)
 
 	//Main listen loop
@@ -33,6 +33,7 @@ func StartSMTPServer() {
 		if err != nil {
 			fmt.Println("Something went wrong with the SMTP listener")
 		}
+		fmt.Println("Incoming...")
 		smtpSessionHandler(conn)
 	}
 }
